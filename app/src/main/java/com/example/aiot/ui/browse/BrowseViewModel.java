@@ -72,7 +72,7 @@ public class BrowseViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("MissingPermission")
-    public void uploadPhoto1(Uri uri, String path) {
+    public void uploadPhoto(String path) {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplication());
         Log.e("Upload", "No nen dc in ra");
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -82,8 +82,13 @@ public class BrowseViewModel extends AndroidViewModel {
                 RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude()));
 
                 File originalFile = new File(path);
+                String magicString = "image/" + (path.substring(path.length() - 3).equals("png") ? "png" : "jpeg");
+                Log.e("DEBUGG", path);
+                Log.e("DEBUGG", magicString);
+
                 RequestBody filePart = RequestBody.create(
-                        MediaType.parse(getApplication().getContentResolver().getType(uri)),originalFile);
+                        //MediaType.parse(getApplication().getContentResolver().getType(uri)),originalFile);
+                        MediaType.parse(magicString),originalFile);
 
                 MultipartBody.Part file = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
                 Call<ResponseBody> call = eventRetrievalService.reportPhoto(lat, lng, file);
@@ -104,8 +109,4 @@ public class BrowseViewModel extends AndroidViewModel {
         });
     }
 
-    @SuppressLint("MissingPermission")
-    public void uploadPhoto(String path){
-        //TODO: Code up photo
-    }
 }
