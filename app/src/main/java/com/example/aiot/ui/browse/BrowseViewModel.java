@@ -72,7 +72,7 @@ public class BrowseViewModel extends AndroidViewModel {
     }
 
     @SuppressLint("MissingPermission")
-    public void uploadPhoto1(Uri uri) {
+    public void uploadPhoto1(Uri uri, String path) {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplication());
         Log.e("Upload", "No nen dc in ra");
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
@@ -81,10 +81,9 @@ public class BrowseViewModel extends AndroidViewModel {
                 RequestBody lat = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLatitude()));
                 RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude()));
 
-                File originalFile = FileUtils.getFile(getApplication(), uri);
+                File originalFile = new File(path);
                 RequestBody filePart = RequestBody.create(
                         MediaType.parse(getApplication().getContentResolver().getType(uri)),originalFile);
-                Log.e("Upload", "No khong nen dc in ra");
 
                 MultipartBody.Part file = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
                 Call<ResponseBody> call = eventRetrievalService.reportPhoto(lat, lng, file);
@@ -92,11 +91,12 @@ public class BrowseViewModel extends AndroidViewModel {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
 
+                        Log.d("Upload file", "SUCCESS");
                     }
 
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
-
+                        Log.d("Upload file", "ERROR");
                     }
                 });
 
@@ -104,6 +104,7 @@ public class BrowseViewModel extends AndroidViewModel {
         });
     }
 
+    @SuppressLint("MissingPermission")
     public void uploadPhoto(String path){
         //TODO: Code up photo
     }

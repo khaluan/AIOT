@@ -21,6 +21,6 @@ public interface EventRetrievalService {
     Call<ArrayList<Event>> updateEvents();
 
     @Multipart
-    @POST("/report")
+    @POST("/upload")
     Call<ResponseBody> reportPhoto(@Part("Lat") RequestBody Lat, @Part("Lng") RequestBody Lng, @Part MultipartBody.Part photo);
 }

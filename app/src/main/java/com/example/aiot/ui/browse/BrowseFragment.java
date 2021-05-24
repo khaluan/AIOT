@@ -75,14 +75,12 @@ public class BrowseFragment extends Fragment {
             @Override
             public void onPhotoClick(String path) {
                 //TODO: Do something here
-                /* Log.d("URI", path);
+                Log.d("URI", path);
                 File file = new File(path);
                 Context context = getContext();
                 Uri uri = FileProvider.getUriForFile(context, context.getPackageName() + ".provider", file);
                 Log.d("URI", uri.toString());
-                browseViewModel.uploadPhoto(uri);
-                */
-                browseViewModel.uploadPhoto(path);
+                browseViewModel.uploadPhoto1(uri, path);
             }
         });
         recyclerView.setAdapter(galleryAdapter);
