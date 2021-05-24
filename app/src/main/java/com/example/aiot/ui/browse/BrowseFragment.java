@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +15,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -24,7 +26,6 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiot.R;
-import com.example.aiot.ui.notifications.NotificationsViewModel;
 
 import java.io.File;
 import java.util.List;
@@ -45,18 +46,18 @@ public class BrowseFragment extends Fragment {
         browseViewModel =
                 new ViewModelProvider(this).get(BrowseViewModel.class);
         View root = inflater.inflate(R.layout.fragment_browse, container, false);
-        // galleryNumber = root.findViewById(R.id.gallery_number);
         recyclerView = root.findViewById(R.id.recyclerview_images);
-
         if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED){
             ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.READ_EXTERNAL_STORAGE}, READ_EXTERNAL_REQUEST_CODE) ;
         }
         else {
             loadImages();
         }
+
         return root;
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
@@ -67,6 +68,7 @@ public class BrowseFragment extends Fragment {
         }
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     private void loadImages() {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4));
@@ -74,13 +76,9 @@ public class BrowseFragment extends Fragment {
         galleryAdapter = new GalleryAdapter(getContext(), images, new GalleryAdapter.PhotoListener() {
             @Override
             public void onPhotoClick(String path) {
-                //TODO: Do something here
-                Log.d("URI", path);
                 browseViewModel.uploadPhoto(path);
             }
         });
         recyclerView.setAdapter(galleryAdapter);
-        // galleryNumber.setText("Photo (" + images.size()+")");
-
     }
 }
