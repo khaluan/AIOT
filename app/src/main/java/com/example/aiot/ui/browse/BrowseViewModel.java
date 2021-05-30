@@ -68,14 +68,18 @@ public class BrowseViewModel extends AndroidViewModel {
         return listAllImage;
     }
 
+    public double getRandomNumber(double min, double max) {
+        return ((Math.random() * (max - min)) + min);
+    }
+
     @SuppressLint("MissingPermission")
     public void uploadPhoto(String path) {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplication());
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                RequestBody lat = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLatitude()));
-                RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude()));
+                RequestBody lat = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLatitude() + getRandomNumber(0.0005, 0.001)));
+                RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude() + getRandomNumber(0.0005, 0.001)));
 
                 File originalFile = new File(path);
                 String magicString = "image/" + (path.substring(path.length() - 3).equals("png") ? "png" : "jpeg");

@@ -3,7 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_report">Report</string>
     <string name="title_map">Map</string>
-    <string name="base_url">http://d05df0a609ed.ngrok.io/</string>
+    <string name="base_url">http://192.168.1.14:8080/</string>
     <string-array name="event_name">
         <item>Bình thường</item>
         <item>Cây ngã</item>

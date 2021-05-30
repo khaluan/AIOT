@@ -3,6 +3,7 @@ package com.example.aiot.ui.map;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
@@ -12,6 +13,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -111,18 +115,29 @@ public class MapsFragment extends Fragment {
 
     }
 
+    private BitmapDescriptor bitmapDescriptorFromVector(Context context, int vectorResId) {
+        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorResId);
+        vectorDrawable.setBounds(0, 0, vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight());
+        Bitmap bitmap = Bitmap.createBitmap(vectorDrawable.getIntrinsicWidth(), vectorDrawable.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+        vectorDrawable.draw(canvas);
+        return BitmapDescriptorFactory.fromBitmap(bitmap);
+    }
+
     private void updateEventOnMap() {
         Integer[] color = new Integer[]{-1, 0, 30, 60, 90, 180, 240, 300};
+        Integer[] icons = new Integer[]{0, R.drawable.ic_treefall, R.drawable.ic_fire, R.drawable.ic_flood, R.drawable.ic_duong_xau, R.drawable.ic_traffic_jam, R.drawable.ic_garbage, R.drawable.ic_accident};
         String[] title = this.getResources().getStringArray(R.array.event_name);
         ArrayList<Event> events = mapViewModel.eventList;
+        if (events == null)
+            return;
         Log.d("DRAWING", events.toString());
         for (Event event : events){
             LatLng location = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongtitude());
             Log.d("DRAWING",String.format("Lat: %s, Lng: %s, Type: %d", location.latitude, location.longitude, event.getType()));
             map.addMarker(new MarkerOptions()
                     .position(location)
-                    .icon(BitmapDescriptorFactory.defaultMarker(color[event.getType()]))
-                    .snippet("Something here")
+                    .icon(bitmapDescriptorFromVector(getContext(), icons[event.getType()]))
                     .title(title[event.getType()]));
         }
     }
