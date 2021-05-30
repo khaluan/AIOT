@@ -1,22 +1,19 @@
 package com.example.aiot.ui.browse;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Application;
 import android.content.Context;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.location.Location;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
-import androidx.core.app.ActivityCompat;
+import androidx.annotation.RequiresApi;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.ViewModel;
 
-import com.example.aiot.FileUtils;
 import com.example.aiot.R;
 import com.example.aiot.ui.map.EventRetrievalService;
 import com.google.android.gms.location.FusedLocationProviderClient;
@@ -24,7 +21,6 @@ import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.io.File;
-import java.net.URI;
 import java.util.ArrayList;
 
 import okhttp3.MediaType;
@@ -50,6 +46,7 @@ public class BrowseViewModel extends AndroidViewModel {
 
     }
 
+    @RequiresApi(api = Build.VERSION_CODES.Q)
     public ArrayList<String> listOfImages(Context context) {
         Uri uri;
         Cursor cursor;
@@ -74,7 +71,6 @@ public class BrowseViewModel extends AndroidViewModel {
     @SuppressLint("MissingPermission")
     public void uploadPhoto(String path) {
         FusedLocationProviderClient fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(getApplication());
-        Log.e("Upload", "No nen dc in ra");
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
@@ -83,8 +79,8 @@ public class BrowseViewModel extends AndroidViewModel {
 
                 File originalFile = new File(path);
                 String magicString = "image/" + (path.substring(path.length() - 3).equals("png") ? "png" : "jpeg");
-                Log.e("DEBUGG", path);
-                Log.e("DEBUGG", magicString);
+                // Log.e("DEBUGG", path);
+                // Log.e("DEBUGG", magicString);
 
                 RequestBody filePart = RequestBody.create(
                         //MediaType.parse(getApplication().getContentResolver().getType(uri)),originalFile);
@@ -95,8 +91,7 @@ public class BrowseViewModel extends AndroidViewModel {
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-
-                        Log.d("Upload file", "SUCCESS");
+                        Log.d("Upload file", response.body().toString());
                     }
 
                     @Override
@@ -104,7 +99,6 @@ public class BrowseViewModel extends AndroidViewModel {
                         Log.d("Upload file", "ERROR");
                     }
                 });
-
             }
         });
     }

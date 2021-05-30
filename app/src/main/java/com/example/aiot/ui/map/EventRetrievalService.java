@@ -17,10 +17,10 @@ import retrofit2.http.Part;
 import retrofit2.http.Path;
 
 public interface EventRetrievalService {
-    @GET("/update")
+    @GET("/events")
     Call<ArrayList<Event>> updateEvents();
 
     @Multipart
     @POST("/upload")
-    Call<ResponseBody> reportPhoto(@Part("Lat") RequestBody Lat, @Part("Lng") RequestBody Lng, @Part MultipartBody.Part photo);
+    Call<ResponseBody> reportPhoto(@Part("latitude") RequestBody Lat, @Part("longitude") RequestBody Lng, @Part MultipartBody.Part photo);
 }

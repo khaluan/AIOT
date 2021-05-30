@@ -46,12 +46,13 @@ public class MapViewModel extends AndroidViewModel {
                 eventList = response.body();
                 liveEventList.postValue(response.body());
                 for(Event e : eventList){
-                    Log.d("EVENT LOG",String.format("Lat: %s, Lng: %s, Type: %d", e.getLocationLat(), e.getLocationLng(), e.getEventType()));
+                    Log.d("EVENT LOG",String.format("Lat: %s, Lng: %s, Type: %s", e.getLocation().getLatitude(), e.getLocation().getLongtitude(), e.getType()));
                 }
             }
             @Override
             public void onFailure(Call<ArrayList<Event>> call, Throwable t) {
                 Log.d("EVENT LOG", "Something wrong");
+                t.printStackTrace();
             }
         });
     }

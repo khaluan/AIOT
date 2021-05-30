@@ -1,13 +1,17 @@
 <resources>
     <string name="app_name">AIOT</string>
     <string name="title_activity_main">MainActivity</string>
-    <string name="title_home">Home</string>
+    <string name="title_report">Report</string>
     <string name="title_map">Map</string>
-    <string name="title_notifications">Notifications</string>
-    <string name="base_url">http://192.168.1.14:8080</string>
+    <string name="base_url">http://d05df0a609ed.ngrok.io/</string>
     <string-array name="event_name">
-        <item>Traffics</item>
-        <item>Flood</item>
-        <item>Other</item>
+        <item>Bình thường</item>
+        <item>Cây ngã</item>
+        <item>Hỏa hoạn</item>
+        <item>Ngập lụt</item>
+        <item>Đường xấu</item>
+        <item>Kẹt xe</item>
+        <item>Rác thải</item>
+        <item>Tai nạn giao thông</item>
     </string-array>
 </resources>

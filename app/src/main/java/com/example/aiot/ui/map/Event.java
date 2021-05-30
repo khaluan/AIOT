@@ -4,40 +4,68 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.gson.annotations.SerializedName;
 
 public class Event {
-    @SerializedName("Lat")
-    public Double locationLat;
-    @SerializedName("Lng")
-    public Double locationLng;
-    @SerializedName("Type")
-    public Integer eventType;
+    @SerializedName("id")
+    public Integer id;
+    @SerializedName("name")
+    public Integer type;
+    @SerializedName("location")
+    public _Location location;
 
-    public Double getLocationLat() {
-        return locationLat;
+    public Integer getId() {
+        return id;
     }
 
-    public void setLocationLat(Double locationLat) {
-        this.locationLat = locationLat;
+    public void setId(Integer id) {
+        this.id = id;
     }
 
-    public Double getLocationLng() {
-        return locationLng;
+    public Integer getType() {
+        return type;
     }
 
-    public void setLocationLng(Double locationLng) {
-        this.locationLng = locationLng;
+    public void setType(Integer type) {
+        this.type = type;
     }
 
-    public Integer getEventType() {
-        return eventType;
+    public _Location getLocation() {
+        return location;
     }
 
-    public void setEventType(Integer eventType) {
-        this.eventType = eventType;
+    public void setLocation(_Location location) {
+        this.location = location;
     }
 
-    public Event(Double locationLat, Double locationLng, Integer eventType) {
-        this.locationLat = locationLat;
-        this.locationLng = locationLng;
-        this.eventType = eventType;
+    public Event(Integer id, Integer type, _Location location) {
+        this.id = id;
+        this.type = type;
+        this.location = location;
+    }
+
+    public class _Location {
+        @SerializedName("latitude")
+        public Double latitude;
+        @SerializedName("longitude")
+        public Double longtitude;
+
+        public Double getLatitude() {
+            return latitude;
+        }
+
+        public void setLatitude(Double latitude) {
+            this.latitude = latitude;
+        }
+
+        public Double getLongtitude() {
+            return longtitude;
+        }
+
+        public void setLongtitude(Double longtitude) {
+            this.longtitude = longtitude;
+        }
+
+        public _Location(Double latitude, Double longtitude) {
+            this.latitude = latitude;
+            this.longtitude = longtitude;
+        }
     }
 }

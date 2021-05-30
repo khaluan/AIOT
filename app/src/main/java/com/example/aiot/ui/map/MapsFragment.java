@@ -21,7 +21,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.aiot.R;
-import com.example.aiot.ui.notifications.NotificationsViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -113,18 +112,18 @@ public class MapsFragment extends Fragment {
     }
 
     private void updateEventOnMap() {
-        Integer[] color = new Integer[]{0, 60, 240, 300};
+        Integer[] color = new Integer[]{-1, 0, 30, 60, 90, 180, 240, 300};
         String[] title = this.getResources().getStringArray(R.array.event_name);
         ArrayList<Event> events = mapViewModel.eventList;
         Log.d("DRAWING", events.toString());
         for (Event event : events){
-            LatLng location = new LatLng(event.locationLat, event.locationLng);
-            Log.d("DRAWING",String.format("Lat: %s, Lng: %s, Type: %d", event.locationLat, event.locationLng, event.eventType));
+            LatLng location = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongtitude());
+            Log.d("DRAWING",String.format("Lat: %s, Lng: %s, Type: %d", location.latitude, location.longitude, event.getType()));
             map.addMarker(new MarkerOptions()
                     .position(location)
-                    .icon(BitmapDescriptorFactory.defaultMarker(color[event.eventType]))
-                    .snippet("Something")
-                    .title(title[event.eventType]));
+                    .icon(BitmapDescriptorFactory.defaultMarker(color[event.getType()]))
+                    .snippet("Something here")
+                    .title(title[event.getType()]));
         }
     }
 
