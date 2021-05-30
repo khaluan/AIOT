@@ -2,6 +2,7 @@ package com.example.aiot.ui.browse;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Build;
@@ -26,6 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.aiot.R;
+import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 
 import java.io.File;
 import java.util.List;
@@ -76,7 +78,22 @@ public class BrowseFragment extends Fragment {
         galleryAdapter = new GalleryAdapter(getContext(), images, new GalleryAdapter.PhotoListener() {
             @Override
             public void onPhotoClick(String path) {
-                browseViewModel.uploadPhoto(path);
+                new MaterialAlertDialogBuilder(getContext())
+                        .setTitle("Confirmation")
+                        .setMessage("Are you sure you want to report with this photo?")
+                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                browseViewModel.uploadPhoto(path);
+                            }
+                        })
+                        .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                return;
+                            }
+                        })
+                        .show();
             }
         });
         recyclerView.setAdapter(galleryAdapter);
