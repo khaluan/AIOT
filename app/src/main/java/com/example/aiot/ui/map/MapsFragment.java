@@ -8,6 +8,8 @@ import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.viewpager.widget.ViewPager;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -23,8 +25,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import com.example.aiot.R;
+import com.example.aiot.ViewPagerAdapter;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdate;
@@ -35,9 +40,14 @@ import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 
+import org.w3c.dom.Text;
+
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,6 +72,13 @@ public class MapsFragment extends Fragment {
         @Override
         public void onMapReady(GoogleMap googleMap) {
             map = googleMap;
+            map.setOnMarkerClickListener(new GoogleMap.OnMarkerClickListener() {
+                @Override
+                public boolean onMarkerClick(@NonNull Marker marker) {
+                    onMarkerClickCallback(marker);
+                    return true;
+                }
+            });
             locationManager = (LocationManager) requireContext().getSystemService(Context.LOCATION_SERVICE);
 
             if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
@@ -74,10 +91,12 @@ public class MapsFragment extends Fragment {
             fusedLocationProviderClient.getLastLocation().addOnSuccessListener(getActivity(), new OnSuccessListener<Location>() {
                 @Override
                 public void onSuccess(Location location) {
-                    LatLng locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
-                    if (locationLatLng == null){
+                    LatLng locationLatLng;
+                    if (location == null)
                         locationLatLng = new LatLng(10.762913, 106.6821717);
-                    }
+                    else
+                        locationLatLng = new LatLng(location.getLatitude(), location.getLongitude());
+
                     CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(locationLatLng, 16);
                     map.animateCamera(cameraUpdate);
                     mapViewModel.requestForEvents();
@@ -86,6 +105,27 @@ public class MapsFragment extends Fragment {
             });
         }
     };
+
+    private void onMarkerClickCallback(Marker marker) {
+        final BottomSheetDialog bottomSheetDialog = new BottomSheetDialog(getContext());
+        View bottomSheetView = LayoutInflater.from(getContext()).inflate(
+                R.layout.bottom_info_sheet,
+                (LinearLayout)getActivity().findViewById(R.id.bottom_sheet_container)
+        );
+        setupViewPager(bottomSheetView, marker);
+
+        TextView eventName = bottomSheetView.findViewById(R.id.event_name);
+        TextView updateTime = bottomSheetDialog.findViewById(R.id.event_update_time);
+        eventName.setText(marker.getTitle());
+        bottomSheetDialog.setContentView(bottomSheetView);
+        bottomSheetDialog.show();
+    }
+
+    private void setupViewPager(View view, Marker marker) {
+        ViewPager2 viewPager = view.findViewById(R.id.view_pager);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), (ArrayList<String>) marker.getTag());
+        viewPager.setAdapter(viewPagerAdapter);
+    }
 
     @Nullable
     @Override
@@ -132,13 +172,18 @@ public class MapsFragment extends Fragment {
         if (events == null)
             return;
         Log.d("DRAWING", events.toString());
+        ArrayList<String> tags = new ArrayList<>();
+        tags.add("https://i.pinimg.com/originals/05/96/7b/05967ba7a49130269bf8c23a3b5e253c.jpg");
+        tags.add("https://pbs.twimg.com/media/CEO6QnFVAAE5ZCh.jpg");
+        tags.add("https://metro.co.uk/wp-content/uploads/2013/01/ay_102510013.jpg?quality=90&strip=all&zoom=1&resize=480%2C320");
         for (Event event : events){
             LatLng location = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongtitude());
             Log.d("DRAWING",String.format("Lat: %s, Lng: %s, Type: %d", location.latitude, location.longitude, event.getType()));
-            map.addMarker(new MarkerOptions()
+            Marker marker = map.addMarker(new MarkerOptions()
                     .position(location)
                     .icon(bitmapDescriptorFromVector(getContext(), icons[event.getType()]))
                     .title(title[event.getType()]));
+            marker.setTag(tags);
         }
     }
 
