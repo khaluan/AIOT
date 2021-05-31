@@ -172,13 +172,11 @@ public class MapsFragment extends Fragment {
         if (events == null)
             return;
         Log.d("DRAWING", events.toString());
-        ArrayList<String> tags = new ArrayList<>();
-        tags.add("https://i.pinimg.com/originals/05/96/7b/05967ba7a49130269bf8c23a3b5e253c.jpg");
-        tags.add("https://pbs.twimg.com/media/CEO6QnFVAAE5ZCh.jpg");
-        tags.add("https://metro.co.uk/wp-content/uploads/2013/01/ay_102510013.jpg?quality=90&strip=all&zoom=1&resize=480%2C320");
         for (Event event : events){
             LatLng location = new LatLng(event.getLocation().getLatitude(), event.getLocation().getLongtitude());
             Log.d("DRAWING",String.format("Lat: %s, Lng: %s, Type: %d", location.latitude, location.longitude, event.getType()));
+            ArrayList<String> tags = new ArrayList<>();
+            tags.add(event.url);
             Marker marker = map.addMarker(new MarkerOptions()
                     .position(location)
                     .icon(bitmapDescriptorFromVector(getContext(), icons[event.getType()]))

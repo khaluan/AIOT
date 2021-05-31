@@ -78,8 +78,8 @@ public class BrowseViewModel extends AndroidViewModel {
         fusedLocationProviderClient.getLastLocation().addOnSuccessListener(new OnSuccessListener<Location>() {
             @Override
             public void onSuccess(Location location) {
-                RequestBody lat = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLatitude() + getRandomNumber(0.0005, 0.001)));
-                RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude() + getRandomNumber(0.0005, 0.001)));
+                RequestBody lat = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLatitude() + getRandomNumber(0.0001, 0.0005)));
+                RequestBody lng = RequestBody.create(MultipartBody.FORM, String.valueOf(location.getLongitude() + getRandomNumber(0.0001, 0.0005)));
 
                 File originalFile = new File(path);
                 String magicString = "image/" + (path.substring(path.length() - 3).equals("png") ? "png" : "jpeg");
@@ -90,12 +90,13 @@ public class BrowseViewModel extends AndroidViewModel {
                         //MediaType.parse(getApplication().getContentResolver().getType(uri)),originalFile);
                         MediaType.parse(magicString),originalFile);
 
-                MultipartBody.Part file = MultipartBody.Part.createFormData("photo", originalFile.getName(), filePart);
+                MultipartBody.Part file = MultipartBody.Part.createFormData("image", originalFile.getName(), filePart);
                 Call<ResponseBody> call = eventRetrievalService.reportPhoto(lat, lng, file);
                 call.enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
-                        Log.d("Upload file", response.body().toString());
+                        String content = response.raw().toString();
+                        Log.d("Upload file", content);
                     }
 
                     @Override

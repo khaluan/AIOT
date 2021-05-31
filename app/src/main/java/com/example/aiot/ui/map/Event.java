@@ -6,8 +6,11 @@ import com.google.gson.annotations.SerializedName;
 public class Event {
     @SerializedName("id")
     public Integer id;
-    @SerializedName("name")
+    @SerializedName("label")
     public Integer type;
+    @SerializedName("url")
+    public String url;
+
     @SerializedName("location")
     public _Location location;
 
@@ -35,9 +38,18 @@ public class Event {
         this.location = location;
     }
 
-    public Event(Integer id, Integer type, _Location location) {
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public Event(Integer id, Integer type, String url, _Location location) {
         this.id = id;
         this.type = type;
+        this.url = url;
         this.location = location;
     }
 
