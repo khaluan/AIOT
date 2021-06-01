@@ -115,7 +115,15 @@ public class MapsFragment extends Fragment {
         setupViewPager(bottomSheetView, marker);
 
         TextView eventName = bottomSheetView.findViewById(R.id.event_name);
-        TextView updateTime = bottomSheetDialog.findViewById(R.id.event_update_time);
+        TextView updateTime = bottomSheetView.findViewById(R.id.event_update_time);
+
+        String eventTime = ((Event)marker.getTag()).time;
+        Integer split = eventTime.length() - 8;
+        String time = eventTime.substring(split);
+        String date = eventTime.substring(0, split);
+
+        updateTime.setText(String.format(getString(R.string.report_time), time, date));
+
         eventName.setText(marker.getTitle());
         bottomSheetDialog.setContentView(bottomSheetView);
         bottomSheetDialog.show();
@@ -123,7 +131,10 @@ public class MapsFragment extends Fragment {
 
     private void setupViewPager(View view, Marker marker) {
         ViewPager2 viewPager = view.findViewById(R.id.view_pager);
-        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), (ArrayList<String>) marker.getTag());
+        Event event = (Event) marker.getTag();
+        ArrayList<String> urls = new ArrayList<>();
+        urls.add(event.url);
+        ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getContext(), urls);
         viewPager.setAdapter(viewPagerAdapter);
     }
 
@@ -181,7 +192,7 @@ public class MapsFragment extends Fragment {
                     .position(location)
                     .icon(bitmapDescriptorFromVector(getContext(), icons[event.getType()]))
                     .title(title[event.getType()]));
-            marker.setTag(tags);
+            marker.setTag(event);
         }
     }
 

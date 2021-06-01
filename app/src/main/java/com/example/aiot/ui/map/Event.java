@@ -10,9 +10,18 @@ public class Event {
     public Integer type;
     @SerializedName("url")
     public String url;
-
+    @SerializedName("time")
+    public String time;
     @SerializedName("location")
     public _Location location;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public Integer getId() {
         return id;
@@ -46,11 +55,12 @@ public class Event {
         this.url = url;
     }
 
-    public Event(Integer id, Integer type, String url, _Location location) {
+    public Event(Integer id, Integer type, String url, _Location location, String time) {
         this.id = id;
         this.type = type;
         this.url = url;
         this.location = location;
+        this.time = time;
     }
 
     public class _Location {
