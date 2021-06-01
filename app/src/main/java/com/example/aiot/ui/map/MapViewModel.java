@@ -1,6 +1,7 @@
 package com.example.aiot.ui.map;
 
 import android.app.Application;
+import android.os.Handler;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -32,6 +33,15 @@ public class MapViewModel extends AndroidViewModel {
         eventRetrievalService = retrofit.create(EventRetrievalService.class);
         eventList = new ArrayList<>();
         liveEventList = new MutableLiveData<>(eventList);
+        final Handler handler = new Handler();
+        Integer delayTime = getApplication().getResources().getInteger(R.integer.fetch_delay_time);
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                handler.postDelayed(this, delayTime);
+                requestForEvents();
+            }
+        }, delayTime);
     }
 
     public MutableLiveData<ArrayList<Event>> getLiveEventList() {
@@ -39,6 +49,7 @@ public class MapViewModel extends AndroidViewModel {
     }
 
     public void requestForEvents(){
+        Log.d("REQUEST DATA", "Request data");
         Call<ArrayList<Event>> call = eventRetrievalService.updateEvents();
         call.enqueue(new Callback<ArrayList<Event>>() {
             @Override
