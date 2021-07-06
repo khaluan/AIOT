@@ -3,7 +3,7 @@
     <string name="title_activity_main">MainActivity</string>
     <string name="title_report">Report</string>
     <string name="title_map">Map</string>
-    <string name="base_url">http://f07ac47f3f89.ngrok.io/</string>
+    <string name="base_url">http://6b168447c116.ngrok.io/</string>
     <string name="report_time">Ghi nhận lúc: %s, ngày %s</string>
     <string-array name="event_name">
         <item>Bình thường</item>
